@@ -1,0 +1,27 @@
+/* Selin Elmas Chapter 2 project CSS */
+body {
+    font-family: Arial, sans-serif;
+    margin: 24px;
+    background: #f9f9f9;
+    color: #222;
+}
+
+.wrap {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    color: #0b508b;
+    margin: 0 0 16px;
+}
+
+p {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-left: 4px solid #0b508b;
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin: 12px 0;
+}
