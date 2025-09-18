@@ -1,0 +1,183 @@
+/* Selin ELMAS 9/17/2025 JavaScript30 Project 
+Adapted from: Wes Bos JS 30: https: //github.com/wesbos/JavaScript30
+Vanilla JS Countdown Timer */
+/* 
+   WHAT I ADDED / CHANGED (OVERVIEW)
+   New style props used:
+      linear-gradient (pink colors)
+      flex-wrap, gap (flex layout)
+      border-radius: 50% and 9999px (circles & pill input)
+      display: inline-flex; align-items; justify-content (center labels)
+      margin-left: auto; order (push the form to the right)
+      outline + outline-offset (clear focus ring)
+   New behavior:
+      Preset buttons are true circles (fixed width/height)
+      Controls can wrap to a new line (no squish/overflow)
+      “Enter Minutes” form sits on the right and is smaller/rounded
+      Softer hover style on buttons
+    */
+
+/* ORIGINAL: blue gradient
+html {
+  background: #8E24AA;
+  background: linear-gradient(45deg,  #42a5f5 0%,#478ed1 50%,#0d47a1 100%);
+}
+*/
+/* Changed the color into pink */
+html {
+    box-sizing: border-box;
+    font-size: 10px;
+    background: #ff85c1;
+    background: linear-gradient(45deg, #ff9ecb 0%, #ff6fae 50%, #ff4fa0 100%);
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    text-align: center;
+    font-family: 'Inconsolata', monospace;
+}
+
+.display__time-left {
+    font-weight: 100;
+    font-size: 20rem;
+    margin: 0;
+    color: white;
+    text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+.timer {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+/* ORIGINAL:
+.timer__controls {
+  display: flex;
+}
+*/
+/* Let controls wrap and add space between items */
+.timer__controls {
+    display: flex;
+    flex-wrap: wrap;
+    /* Added wrap */
+    gap: 0.75rem;
+    /* Added gap */
+}
+
+.timer__controls>* {
+    flex: 1;
+}
+
+.timer__controls form {
+    flex: 1;
+    display: flex;
+}
+
+.timer__controls input {
+    flex: 1;
+    border: 0;
+    padding: 2rem;
+}
+
+.timer__button {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: white;
+    font-size: 2rem;
+    text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    font-family: 'Inconsolata', monospace;
+}
+
+/* ORIGINAL (combined hover+focus):
+.timer__button:hover,
+.timer__button:focus {
+  background: rgba(0,0,0,0.2);
+  outline: 0;
+}
+*/
+/* Lighter hover, better focus outline */
+.timer__button:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.timer__button:focus {
+    background: rgba(0, 0, 0, 0.2);
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+}
+
+.timer__button:active {
+    transform: translateY(1px);
+}
+
+.display {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.display__end-time {
+    font-size: 4rem;
+    color: white;
+}
+
+/* Added: stop buttons from stretching so circles stay circles */
+.timer__controls .timer__button {
+    flex: 0 0 auto;
+}
+
+/* Added: make only preset buttons perfect circles */
+.timer__controls .timer__button[data-time] {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.1;
+    padding: 0.5rem;
+
+    font-size: 1.6rem;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.timer__controls .timer__button[data-time]:hover {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+/* Added: move custom form to the right and keep it small */
+#custom {
+    flex: 0 0 auto;
+    /* don't stretch */
+    margin-left: auto;
+    /* push right */
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    order: 999;
+
+}
+
+/* Added: smaller "Enter Minutes" input */
+#custom input {
+    flex: 0 0 250px;
+    padding: .6rem .9rem;
+    font-size: 1.4rem;
+    border-radius: 9999px;
+}
