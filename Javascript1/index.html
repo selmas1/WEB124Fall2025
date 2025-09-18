@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Countdown Timer</title>
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://fav.farm/🔥" />
+    <!-- Selin ELMAS 9/17/2025 JavaScript30 Project -->
+    <!-- Adapted from: Wes Bos JS30: https://github.com/wesbos/JavaScript30 | Vanilla JS Countdown Timer -->
+</head>
+
+<body>
+    <div class="timer">
+        <div class="timer__controls">
+            <!-- original kept (unchanged) -->
+            <button data-time="20" class="timer__button">20 Secs</button>
+            <button data-time="300" class="timer__button">Work 5</button>
+            <button data-time="900" class="timer__button">Quick 15</button>
+
+            <!-- CHANGED label: Snack 20 -> Nap 20 -->
+            <!-- original:
+      <button data-time="1200" class="timer__button">Snack 20</button>
+      -->
+            <button data-time="1200" class="timer__button">Nap 20</button>
+
+            <!-- CHANGED label: Lunch Break -> Study Break -->
+            <!-- original:
+      <button data-time="3600" class="timer__button">Lunch Break</button>
+      -->
+            <button data-time="3600" class="timer__button">Study Break</button>
+
+            <!-- original kept (unchanged structure) -->
+            <form name="customForm" id="custom">
+                <input type="text" name="minutes" placeholder="Enter Minutes">
+            </form>
+        </div>
+
+        <div class="display">
+            <h1 class="display__time-left"></h1>
+            <p class="display__end-time"></p>
+        </div>
+    </div>
+
+    <!-- CHANGED script file: scripts-START.js -> scripts.js -->
+    <!-- original:
+  <script src="scripts-START.js"></script>
+  -->
+    <script src="scripts.js"></script>
+</body>
+
+</html>
