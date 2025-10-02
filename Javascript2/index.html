@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+  <link rel="icon" href="https://fav.farm/✅" />
+  <!-- Selin ELMAS 10/01/2025 JavaScript30 Project -->
+  <!-- Adapted from: Wes Bos JS30: https://github.com/wesbos/JavaScript30 | JS + CSS Clock -->
+  <!-- Background image: Pink Petaled Flowers Closeup by Irina Iriser from Pexels -->
+
+  <style>
+    html {
+      /* ORIGINAL:
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+      */
+      /* CHANGED: use local Pexels cherry blossom photo, blur behind content */
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+      position: relative;
+      min-height: 100%;
+    }
+
+    /* CHANGED: move background into a blurred fixed pseudo-layer so clock stays sharp */
+    html::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: url('sakura.jpg') no-repeat center center / cover;
+      filter: blur(6px);
+      transform: scale(1.05);
+      z-index: -1;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex-direction: column;
+      /* CHANGED: stack digital readout over clock */
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      /* ADDED: space between digital + clock */
+      color: white;
+      /* ADDED: readable on blossom bg */
+    }
+
+    /* ADDED: digital readout */
+    .digital {
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .digital-time {
+      font-size: 4rem;
+      letter-spacing: .05em;
+    }
+
+    .digital-date {
+      font-size: 1.6rem;
+      opacity: .9;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      /* ORIGINAL: margin: 50px auto; */
+      /* CHANGED: center via flex above; remove extra top margin */
+      margin: 0 auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px);
+      /* ORIGINAL: account for hand height */
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute;
+      top: 50%;
+      transform-origin: 100%;
+      transform: rotate(90deg);
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+      border-radius: 6px;
+      /* ADDED: rounded ends */
+    }
+
+    /* ADDED: red second hand */
+    .second-hand {
+      background: #e53935;
+    }
+
+    /* ADDED: center pivot */
+    .center-dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: white;
+      border: 3px solid #e53935;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      box-shadow: 0 0 8px rgba(0, 0, 0, .25);
+    }
+
+    /* ADDED: face numbers */
+    .clock-number {
+      position: absolute;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, .4);
+      user-select: none;
+    }
+
+    .twelve {
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .three {
+      right: 8%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .six {
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nine {
+      left: 8%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ADDED: digital time/date (unchanged clock structure below) -->
+  <div class="digital">
+    <div class="digital-time">--:--:--</div>
+    <div class="digital-date">--</div>
+  </div>
+
+  <div class="clock">
+    <div class="clock-face">
+      <!-- ADDED: hour numbers -->
+      <div class="clock-number twelve">12</div>
+      <div class="clock-number three">3</div>
+      <div class="clock-number six">6</div>
+      <div class="clock-number nine">9</div>
+
+      <!-- ADDED: center dot -->
+      <div class="center-dot"></div>
+
+      <div class="hand hour-hand"></div>
+      <div class="hand min-hand"></div>
+      <div class="hand second-hand"></div>
+    </div>
+  </div>
+
+  <script>
+    // ORIGINAL:
+    // const secondHand = document.querySelector('.second-hand');
+    // const minsHand = document.querySelector('.min-hand');
+    // const hourHand = document.querySelector('.hour-hand');
+    // CHANGED: also grab digital elements
+    const secondHand = document.querySelector('.second-hand');
+    const minsHand = document.querySelector('.min-hand');
+    const hourHand = document.querySelector('.hour-hand');
+    const digitalTime = document.querySelector('.digital-time'); // ADDED
+    const digitalDate = document.querySelector('.digital-date'); // ADDED
+
+    function setDate() {
+      const now = new Date();
+
+      const seconds = now.getSeconds();
+      const secondsDegrees = ((seconds / 60) * 360) + 90;
+      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+      const mins = now.getMinutes();
+      const minsDegrees = ((mins / 60) * 360) + ((seconds / 60) * 6) + 90;
+      minsHand.style.transform = `rotate(${minsDegrees}deg)`;
+
+      const hour = now.getHours();
+      const hourDegrees = ((hour / 12) * 360) + ((mins / 60) * 30) + 90;
+      hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+
+      // ADDED: digital time & date
+      digitalTime.textContent = now.toLocaleTimeString();
+      digitalDate.textContent = now.toLocaleDateString(undefined, {
+        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+      });
+    }
+
+    // ORIGINAL:
+    // setInterval(setDate, 1000);
+    // setDate();
+    // (kept behavior the same, just leaving the original comment pattern)
+    setInterval(setDate, 1000);
+    setDate();
+  </script>
+</body>
+
+</html>
