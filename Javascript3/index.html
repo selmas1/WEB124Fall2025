@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flex Panels 💪 — Dessert Mood Gallery</title>
+    <link href='https://fonts.googleapis.com/css?family=Amatic+SC' rel='stylesheet' type='text/css'>
+    <link rel="icon" href="https://fav.farm/✅" />
+
+    <!-- Selin ELMAS JavaScript3 Project 10/08/2025 — Flexbox + JavaScript Image Gallery (Modified from Wes Bos JS30 “Flex Panels”) -->
+    <!-- WHAT I CHANGED / ADDED:
+        Replaced images with dessert photos + fun captions
+        Added toolbar with “Close All” button
+        Made panels mutually exclusive (open one = close others)
+        Fade-in animation for text; soft glow on hover
+        Body background tint changes per dessert
+        Credits for photo sources (below)
+        Captions written with assistance from ChatGPT (OpenAI)
+
+  -->
+
+    <!-- PHOTO CREDITS (you provided these sources):
+       Tiramisu: https://www.bakinglikeachef.com/authentic-italian-tiramisu-recipe/
+       Baklava:  https://www.tasteatlas.com/baklava/recipe
+       Éclair:   https://www.recipetineats.com/eclairs/
+       Crème Brûlée: https://confessionsofabakingqueen.com/vanilla-bean-creme-brulee/
+       Chocolate Chip Cookies: https://handletheheat.com/bakery-style-chocolate-chip-cookies/
+  -->
+
+    <style>
+        html {
+            box-sizing: border-box;
+            background: #ffc600;
+            font-family: 'helvetica neue';
+            font-size: 20px;
+            font-weight: 200;
+            transition: background-color .4s ease;
+            /* ADDED: smooth tint change */
+        }
+
+        *,
+        *:before,
+        *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        /* ADDED: header + toolbar */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: .75rem 1rem;
+            color: #222;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(6px);
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Amatic SC', cursive;
+            font-size: 2.4rem;
+            letter-spacing: .5px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: .5rem;
+        }
+
+        .btn {
+            border: 2px solid #222;
+            background: transparent;
+            padding: .35rem .75rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: .95rem;
+            transition: background .2s ease, transform .05s ease;
+        }
+
+        .btn:hover {
+            background: rgba(0, 0, 0, .08);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .panels {
+            min-height: calc(100vh - 58px);
+            overflow: hidden;
+            display: flex;
+        }
+
+        .panel {
+            background: #6B0F9C;
+            box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            align-items: center;
+            /* Safari transitionend event.propertyName === flex */
+            /* Chrome + FF transitionend event.propertyName === flex-grow */
+            transition:
+                font-size 0.7s cubic-bezier(0.61, -0.19, 0.7, -0.11),
+                flex 0.7s cubic-bezier(0.61, -0.19, 0.7, -0.11),
+                background 0.2s;
+            font-size: 20px;
+            background-size: cover;
+            background-position: center;
+            flex: 1;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* ORIGINAL:
+       .panel1 { background-image: url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
+       .panel2 { background-image: url(https://source.unsplash.com/rFKUFzjPYiQ/1500x1500); }
+       .panel3 { background-image: url(…d57?w=1500&h=1500&fit=crop…); }
+       .panel4 { background-image: url(https://source.unsplash.com/ITjiVXcwVng/1500x1500); }
+       .panel5 { background-image: url(https://source.unsplash.com/3MNzGlQM7qs/1500x1500); }
+    */
+        /* CHANGED: use dessert photos (replace paths with your files in repo) */
+        .panel1 {
+            background-image: url('tiramisu.png');
+        }
+
+        .panel2 {
+            background-image: url('brulee.png');
+        }
+
+        .panel3 {
+            background-image: url('baklava.png');
+        }
+
+        .panel4 {
+            background-image: url('eclair.png');
+        }
+
+        .panel5 {
+            background-image: url('ccc.png');
+        }
+
+        /* Flex Items */
+        .panel>* {
+            margin: 0;
+            width: 100%;
+            transition: transform 0.5s, opacity .5s ease;
+            /* CHANGED: add opacity for fade */
+            flex: 1 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-inline: .5rem;
+        }
+
+        .panel>*:first-child {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .panel.open-active>*:first-child {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .panel>*:last-child {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        .panel.open-active>*:last-child {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .panel p {
+            text-transform: uppercase;
+            font-family: 'Amatic SC', cursive;
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
+            font-size: 2em;
+        }
+
+        /* ORIGINAL: .panel p:nth-child(2) { font-size: 4em; } */
+        /* CHANGED: make the middle line bigger *and* fade in slightly later */
+        .panel p:nth-child(2) {
+            font-size: 4em;
+            transition-delay: .06s;
+        }
+
+        .panel.open {
+            flex: 5;
+            font-size: 40px;
+        }
+
+        /* ADDED: sweet hover glow so it feels interactive even before click */
+        .panel:hover {
+            box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.25), 0 8px 30px rgba(0, 0, 0, .25);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .panel p {
+                font-size: 1.1em;
+            }
+
+            .panel p:nth-child(2) {
+                font-size: 2.4em;
+            }
+
+            header h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ADDED: header + Close All button -->
+    <header>
+        <h1>Pick Your Dessert Mood 🍮</h1>
+        <div class="toolbar">
+            <button class="btn" id="closeAllBtn">Close All</button>
+        </div>
+    </header>
+
+    <div class="panels">
+        <!-- CHANGED: text to dessert name + caption
+         ADDED: data-tint to color the page when opened -->
+        <div class="panel panel1" data-tint="#7a5a46">
+            <p>Tiramisu</p>
+            <p>Coffee • Cocoa • Layers</p>
+            <p>“Happiness in every bite”</p>
+        </div>
+
+        <div class="panel panel2" data-tint="#caa06b">
+            <p>Crème Brûlée</p>
+            <p>Crack the Caramel</p>
+            <p>“Crunch, then custard”</p>
+        </div>
+
+        <div class="panel panel3" data-tint="#b98b43">
+            <p>Baklava</p>
+            <p>Sweet • Sticky • Proud</p>
+            <p>“Layers of joy”</p>
+        </div>
+
+        <div class="panel panel4" data-tint="#8a6d5c">
+            <p>Éclair</p>
+            <p>Filled with Joy</p>
+            <p>“Choux + cream = 💛”</p>
+        </div>
+
+        <div class="panel panel5" data-tint="#8b6a52">
+            <p>Choco Chip Cookies</p>
+            <p>Warm • Gooey • Cozy</p>
+            <p>“A hug in a bite”</p>
+        </div>
+    </div>
+
+    <script>
+        const panels = document.querySelectorAll('.panel');
+        const closeAllBtn = document.getElementById('closeAllBtn');
+
+        // ORIGINAL:
+        // function toggleOpen() {
+        //   console.log('Hello');
+        //   this.classList.toggle('open');
+        // }
+        // CHANGED: make panels mutually exclusive (open one, close others)
+        function toggleOpen() {
+            const alreadyOpen = this.classList.contains('open');
+            panels.forEach(p => p.classList.remove('open', 'open-active'));
+            if (!alreadyOpen) this.classList.add('open');
+
+            // ADDED: change the page tint using data attribute
+            const tint = alreadyOpen ? '#ffc600' : this.dataset.tint || '#ffc600';
+            document.documentElement.style.background = tint;
+        }
+
+        function toggleActive(e) {
+            // ORIGINAL: if (e.propertyName.includes('flex')) { this.classList.toggle('open-active'); }
+            // CHANGED: only add open-active when expanding (not collapsing)
+            if (e.propertyName.includes('flex') && this.classList.contains('open')) {
+                this.classList.add('open-active');
+            }
+        }
+
+        // ADDED: close all button
+        function closeAll() {
+            panels.forEach(p => p.classList.remove('open', 'open-active'));
+            document.documentElement.style.background = '#ffc600';
+        }
+
+        panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+        panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
+        closeAllBtn.addEventListener('click', closeAll);
+    </script>
+
+</body>
+
+</html>
