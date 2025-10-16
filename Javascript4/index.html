@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Grocery List for Cookies</title>
+    <link rel="icon" href="https://fav.farm/✅" />
+    <!-- Selin ELMAS 10/15/2025 — JS Checkbox Challenge - Wes Bos JS30 - 10/30 -->
+    <!-- MODIFICATIONS SUMMARY:
+       Updated background to a soft gradient for visual interest.
+       Made the white “paper” (inbox) wider for better readability.
+       Made the check markers pink.
+       Added pink accent colors to match theme.
+       Changed the list to a cookie grocery list.
+  -->
+</head>
+
+<body>
+    <style>
+        html {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffe9a3 0%, #fbc2eb 100%);
+            min-height: 100vh;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 40px;
+        }
+
+        /* CHANGED: widened from 600px to 800px for a larger “paper” area */
+        .inbox {
+            max-width: 800px;
+            margin: 0 auto 50px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .item:last-child {
+            border-bottom: 0;
+        }
+
+        input[type="checkbox"] {
+            margin: 20px;
+            accent-color: #f06292;
+            /* pink accent for checkbox */
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        input:checked+p {
+            background: #fdf2f8;
+            /* soft pastel pink highlight */
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        p {
+            margin: 0;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+            flex: 1;
+            font-size: 20px;
+            font-weight: 300;
+            border-left: 3px solid #ffb6c1;
+            /* matches checkbox color */
+        }
+    </style>
+
+    <!-- CHANGED: replaced inbox list items with cookie ingredients -->
+    <div class="inbox">
+        <div class="item">
+            <input type="checkbox">
+            <p>All-purpose flour</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Baking soda</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Unsalted butter</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Brown sugar</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Granulated sugar</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Vanilla extract</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Large eggs</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Chocolate chips</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Sea salt for topping</p>
+        </div>
+    </div>
+
+    <script>
+        // ORIGINAL LOGIC (UNCHANGED):
+        // Hold Shift + click another checkbox to select everything in between.
+        const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]');
+        let lastChecked;
+
+        function handleCheck(e) {
+            let inBetween = false;
+            if (e.shiftKey && this.checked) {
+                checkboxes.forEach(checkbox => {
+                    if (checkbox === this || checkbox === lastChecked) {
+                        inBetween = !inBetween;
+                    }
+                    if (inBetween) {
+                        checkbox.checked = true;
+                    }
+                });
+            }
+            lastChecked = this;
+        }
+
+        checkboxes.forEach(checkbox =>
+            checkbox.addEventListener('click', handleCheck)
+        );
+    </script>
+
+</body>
+
+</html>
