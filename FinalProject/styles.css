@@ -1,0 +1,116 @@
+/* Author: Selin Elmas 10/30/2025 Final Project: JavaScript Calculator*/
+:root {
+    --bg: #ffe6f0;
+    --accent: #ff66a3;
+    --accent-dark: #cc4d80;
+    --text: #333;
+    --card-bg: #fff;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+/* Header */
+h1 {
+    font-size: 2.2rem;
+    color: var(--accent-dark);
+    text-shadow: 1px 1px #fff;
+    margin-bottom: 1.2rem;
+}
+
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+label {
+    font-weight: 600;
+}
+
+input[type="number"] {
+    width: 8rem;
+    padding: .5rem .6rem;
+    border-radius: .4rem;
+    border: 2px solid var(--accent);
+    outline: none;
+    font-size: 1rem;
+    background-color: #fff;
+}
+
+button {
+    background-color: var(--accent);
+    border: none;
+    color: white;
+    padding: .6rem 1rem;
+    border-radius: .5rem;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+button:hover {
+    background-color: var(--accent-dark);
+    transform: scale(1.05);
+}
+
+/* Results grid */
+.results {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.results p {
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: .75rem;
+    padding: 1rem;
+    min-height: 7rem;
+    white-space: pre-line;
+    font-size: .95rem;
+    box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.1);
+    transition: transform .2s ease;
+}
+
+.results p:hover {
+    transform: translateY(-4px);
+}
+
+/* Media queries */
+@media (max-width: 900px) {
+    .results {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 550px) {
+    .results {
+        grid-template-columns: 1fr;
+    }
+
+    input[type="number"] {
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+}
